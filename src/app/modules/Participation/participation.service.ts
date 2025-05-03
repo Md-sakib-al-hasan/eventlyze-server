@@ -1,5 +1,5 @@
 
-import { ParticipantStatus } from '@prisma/client';
+import { Event, ParticipantStatus, PaymentStatus } from '@prisma/client';
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -8,8 +8,21 @@ const handleJoinRequest = async (userEmail: string, eventId: string) => {
     const user = await prisma.user.findUnique({ where: { email: userEmail } });
     if (!user) throw new Error('User not found');
 
-    const event = await prisma.event.findUnique({ where: { id: eventId } });
+    const event = await prisma.event.findUnique({ where: { id: eventId },include: {payment: true,}, });
     if (!event) throw new Error('Event not found');
+
+    if (event.isPaid && event.payment.status !== PaymentStatus.SUCCESS){
+        switch (event.payment?.status) {
+            case PaymentStatus.PENDING:
+              throw new Error('Event is not paid yet');
+          
+            case PaymentStatus.FAILED:
+              throw new Error('Event payment failed');
+          
+            case PaymentStatus.CANCELLED:
+              throw new Error('Event payment cancelled');
+        }
+    }
 
     const existingParticipant = await prisma.participant.findFirst({
         where: {
