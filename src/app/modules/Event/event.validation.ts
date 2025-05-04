@@ -33,8 +33,8 @@ export const EventSchema = z.object({
           .nonnegative({ message: "Seat count cannot be negative." }),
       
         eventBanner: z.string().min(1, { message: "Event banner URL is required." }),
-        status: EventStatusEnum,
-        eventType: EventTypeEnum,
+        status: EventStatusEnum.optional(),
+        eventType: EventTypeEnum
       })
 })
 

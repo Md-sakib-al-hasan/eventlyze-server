@@ -14,7 +14,7 @@ CREATE TYPE "EventStatus" AS ENUM ('UPCOMING', 'CANCELED', 'ONGOING', 'COMPLETED
 CREATE TYPE "EventType" AS ENUM ('ONLINE', 'OFFLINE');
 
 -- CreateEnum
-CREATE TYPE "ParticipantStatus" AS ENUM ('JOINED', 'REQUESTED', 'APPROVED', 'REJECTED');
+CREATE TYPE "ParticipantStatus" AS ENUM ('JOINED', 'REQUESTED', 'APPROVED', 'REJECTED', 'CANCELLED');
 
 -- CreateEnum
 CREATE TYPE "PaymentStatus" AS ENUM ('SUCCESS', 'CANCELLED', 'PENDING', 'COMPLETED', 'FAILED');
@@ -82,8 +82,9 @@ CREATE TABLE "participants" (
     "id" TEXT NOT NULL,
     "eventId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "status" "ParticipantStatus" NOT NULL DEFAULT 'REQUESTED',
+    "status" "ParticipantStatus",
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "participants_pkey" PRIMARY KEY ("id")
 );
@@ -113,6 +114,7 @@ CREATE TABLE "Payment" (
 -- CreateTable
 CREATE TABLE "Review" (
     "id" TEXT NOT NULL,
+    "eventId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "rating" INTEGER NOT NULL,
@@ -135,9 +137,6 @@ ALTER TABLE "events" ADD CONSTRAINT "events_ownerId_fkey" FOREIGN KEY ("ownerId"
 ALTER TABLE "events" ADD CONSTRAINT "events_paymentId_fkey" FOREIGN KEY ("paymentId") REFERENCES "Payment"("paymentId") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "events" ADD CONSTRAINT "events_reviewId_fkey" FOREIGN KEY ("reviewId") REFERENCES "Review"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "participants" ADD CONSTRAINT "participants_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "events"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -147,4 +146,7 @@ ALTER TABLE "participants" ADD CONSTRAINT "participants_userId_fkey" FOREIGN KEY
 ALTER TABLE "Payment" ADD CONSTRAINT "Payment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Review" ADD CONSTRAINT "Review_id_fkey" FOREIGN KEY ("id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Review" ADD CONSTRAINT "Review_eventId_fkey" FOREIGN KEY ("eventId") REFERENCES "events"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Review" ADD CONSTRAINT "Review_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -9,6 +9,7 @@ const router = express.Router();
 
 
 // Create Event (only if logged in)
+
 router.post('/', auth(UserRole.USER),validateRequest(EventValidiontonSchema.EventSchema), eventController.createEvent);
 router.get('/', eventController.getEvents);
 router.get('/:id', eventController.getEventById);
