@@ -12,7 +12,7 @@ const prisma = new PrismaClient();
 
 
 const createEvent = async (data:Event, user:JwtPayload) => {
-  console.log(data)
+  
     
     const email = user?.email;
     const existingUser = await prisma.user.findUnique({
