@@ -15,7 +15,7 @@ const store_id = config.SSLcommer_store_id;
 const store_passwd = config.SSLcommer_password;
 const is_live = false;
 
-const createpaymentBd = async (payload:Tpaymentpayload,transactionClinet:Prisma.TransactionClient) => {
+const createpaymentBd = async (payload:Tpaymentpayload) => {
     const id = uuid4();
     const data = {
       total_amount: payload.price,
@@ -56,10 +56,10 @@ const createpaymentBd = async (payload:Tpaymentpayload,transactionClinet:Prisma.
     );
   
     const apiResponse = await sslcz.init(data);
-    console.log('API Response:', apiResponse);
+    
     const GatewayPageURL = apiResponse.GatewayPageURL;
-   console.log(GatewayPageURL);
-    const newpayment = await transactionClinet.payment.create({
+   
+    const newpayment = await prisma.payment.create({
       data: {
         paymentId: id,
         eventId: payload.eventId,

@@ -5,17 +5,17 @@ import { PaymentService } from "./payment.service";
 import { Request, Response } from "express";
 
 
-// const createPayment = catchAsync(async (req:Request, res:Response) => {
+const createPayment = catchAsync(async (req:Request, res:Response) => {
     
-//     const result = await PaymentService.createpaymentBd(req.body)  ;
-//     sendResponse(res, {
-//         statusCode: StatusCodes.OK,
-//         success: true,
-//         message: "succesfully get payment",
-//         data:result,
-//       });
+    const result = await PaymentService.createpaymentBd(req.body)  ;
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: "succesfully get payment",
+        data:result,
+      });
     
-//   });
+  });
 
 
 const successfullypaid = catchAsync(async (req:Request, res:Response) => {
@@ -57,7 +57,7 @@ const getpayment = catchAsync(async (req:Request, res:Response) => {
     paymentFails,
     paymentcancle,
     getpayment,
-    // createPayment,
+    createPayment,
     
   } 
   

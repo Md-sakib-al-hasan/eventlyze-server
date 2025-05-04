@@ -31,15 +31,7 @@ const createEvent = async (data:Event, user:JwtPayload) => {
                 ownerId: existingUser.id,
             },
         });
-      const paymentData:Tpaymentpayload = {
-        price: event.price,
-        eventId: event.id,
-        username:existingUser.name,
-        email:existingUser.email,
-        userId:existingUser.id
-        
-      } 
-      const newpayment =  PaymentService.createpaymentBd(paymentData,transactionclient)
+
 
         return { event, };
     })
